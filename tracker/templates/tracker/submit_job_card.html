@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="form-card p-4 shadow-sm bg-white border-0 rounded-3">
+        <h4 class="mb-4 text-primary">Submit a Maintenance Request</h4>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Location</label>
+            {% if form.location.errors %}
+              {{ form.location|add_class:"form-control is-invalid" }}
+              <div class="invalid-feedback">
+                {{ form.location.errors.0 }}
+              </div>
+            {% else %}
+              {{ form.location|add_class:"form-control" }}
+            {% endif %}
+
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Work Required</label>
+
+                        {% if form.work_required.errors %}
+              {{ form.work_required|add_class:"form-control is-invalid" }}
+              <div class="invalid-feedback">
+                {{ form.work_required.errors.0 }}
+              </div>
+            {% else %}
+              {{ form.work_required|add_class:"form-control" }}
+            {% endif %}
+
+
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reported By</label>
+                        {% if form.reported_by.errors %}
+              {{ form.reported_by|add_class:"form-control is-invalid" }}
+              <div class="invalid-feedback">
+                {{ form.reported_by.errors.0 }}
+              </div>
+            {% else %}
+              {{ form.reported_by|add_class:"form-control" }}
+            {% endif %}
+
+
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Department</label>
+
+                        {% if form.department_of_reporter.errors %}
+              {{ form.department_of_reporter|add_class:"form-control is-invalid" }}
+              <div class="invalid-feedback">
+                {{ form.department_of_reporter.errors.0 }}
+              </div>
+            {% else %}
+              {{ form.department_of_reporter|add_class:"form-control" }}
+            {% endif %}
+
+
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+
+                        {% if form.category.errors %}
+              {{ form.category|add_class:"form-control is-invalid" }}
+              <div class="invalid-feedback">
+                {{ form.category.errors.0 }}
+              </div>
+            {% else %}
+              {{ form.category|add_class:"form-control" }}
+            {% endif %}
+
+          </div>
+          <button type="submit" class="btn btn-facebook w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

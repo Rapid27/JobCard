@@ -1,0 +1,31 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-primary">Maintenance Dashboard</h2>
+  <ul class="nav nav-tabs mt-4 mb-3">
+    {% for cat in category_list %}
+      <li class="nav-item">
+        <a class="nav-link {% if category == cat %}active{% endif %}" href="?category={{ cat }}">{{ cat|title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="list-group">
+    {% for card in job_cards %}
+      <div class="list-group-item">
+        <h5>{{ card.location }} - {{ card.reported_by }} <small class="text-muted">({{ card.timestamp }})</small></h5>
+        <p>{{ card.work_required }}</p>
+        <form method="post" action="{% url 'update_status' card.pk %}" class="d-flex align-items-center">
+          {% csrf_token %}
+          <select name="status" class="form-select me-2">
+            {% for key, label in card.STATUS_CHOICES %}
+              <option value="{{ key }}" {% if card.status == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-sm btn-primary">Update</button>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

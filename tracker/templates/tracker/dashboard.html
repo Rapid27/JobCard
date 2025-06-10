@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-primary mb-4">Maintenance Dashboard</h3>
+
+  <!-- Category Tabs -->
+  <ul class="nav nav-tabs mb-4">
+    {% for cat in category_list %}
+      <li class="nav-item">
+        <a class="nav-link {% if category == cat %}active{% endif %}"
+           style="font-weight: 500;" href="?category={{ cat }}">{{ cat|title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% if job_cards %}
+    <div class="row">
+      {% for card in job_cards %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-body">
+              <h5 class="card-title text-facebook">{{ card.location }}</h5>
+              <p class="card-text mb-2"><strong>Work:</strong> {{ card.work_required }}</p>
+              <p class="mb-1 text-muted">
+                <strong>By:</strong> {{ card.reported_by }} ({{ card.department_of_reporter }})<br>
+                <small class="text-secondary">Submitted: {{ card.time_submitted|date:"M d, Y H:i" }}</small>
+              </p>
+              <form method="post" action="{% url 'update_status' card.pk %}" class="mt-2">
+                {% csrf_token %}
+                <label for="status-{{ card.pk }}" class="form-label">Status</label>
+                <div class="input-group">
+                  <select name="status" id="status-{{ card.pk }}" class="form-select">
+                    {% for key, label in card.STATUS_CHOICES %}
+                      <option value="{{ key }}" {% if card.status == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="submit" class="btn btn-facebook">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No job cards in this category yet.</div>
+  {% endif %}
+</div>
+{% endblock %}
