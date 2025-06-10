@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load custom_filters %}
 <div class="container mt-4">
   <h3 class="text-primary mb-4">Maintenance Dashboard</h3>
 
@@ -19,15 +20,32 @@
         <div class="col-md-6 col-lg-4 mb-4">
           <div class="card shadow-sm border-0 rounded-4 h-100">
             <div class="card-body">
-              <h5 class="card-title text-facebook">{{ card.location }}</h5>
-              <p class="card-text mb-2"><strong>Work:</strong> {{ card.work_required }}</p>
+              <!-- Icon + Title -->
+              <h5 class="card-title text-facebook mb-2">
+                {{ card_icon_map|get_item:card.category }} {{ card.location }}
+              </h5>
+
+              <!-- Status Badge -->
+              <span class="badge
+                  {% if card.status == 'pending' %}bg-secondary
+                  {% elif card.status == 'received' %}bg-info
+                  {% elif card.status == 'awaiting_spares' %}bg-warning text-dark
+                  {% elif card.status == 'done' %}bg-success
+                  {% endif %}">
+                {{ card.status|capfirst }}
+              </span>
+
+              <!-- Description -->
+              <p class="card-text mt-2"><strong>Work:</strong> {{ card.work_required }}</p>
               <p class="mb-1 text-muted">
                 <strong>By:</strong> {{ card.reported_by }} ({{ card.department_of_reporter }})<br>
                 <small class="text-secondary">Submitted: {{ card.time_submitted|date:"M d, Y H:i" }}</small>
               </p>
+
+              <!-- Status Update -->
               <form method="post" action="{% url 'update_status' card.pk %}" class="mt-2">
                 {% csrf_token %}
-                <label for="status-{{ card.pk }}" class="form-label">Status</label>
+                <label for="status-{{ card.pk }}" class="form-label">Update Status</label>
                 <div class="input-group">
                   <select name="status" id="status-{{ card.pk }}" class="form-select">
                     {% for key, label in card.STATUS_CHOICES %}

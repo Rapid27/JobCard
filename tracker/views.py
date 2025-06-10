@@ -26,10 +26,31 @@ def track_job_card(request):
 
 @login_required
 def maintenance_dashboard(request):
-    category_list = [ 'plumbing', 'electrical', 'carpentry', 'building', 'painting' ]
+
+    category_list = ['plumbing', 'electrical', 'carpentry', 'building', 'painting']
     category = request.GET.get('category', 'electrical')
     job_cards = JobCard.objects.filter(category=category)
-    return render(request, 'tracker/dashboard.html', {'job_cards': job_cards, 'category': category, 'category_list' : category_list})
+
+    # Map icons
+    card_icon_map = {
+        'plumbing': '🚿',
+        'electrical': '💡',
+        'carpentry': '🪚',
+        'building': '🏗️',
+        'painting': '🎨',
+    }
+
+    return render(request, 'tracker/dashboard.html', {
+        'job_cards': job_cards,
+        'category': category,
+        'category_list': category_list,
+        'card_icon_map': card_icon_map,
+    })
+
+
+
+
+
 
 @login_required
 def update_status(request, pk):
