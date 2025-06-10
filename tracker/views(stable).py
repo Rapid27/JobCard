@@ -3,13 +3,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import JobCard
 from .forms import JobCardForm
+from django.contrib import messages
+
 
 def submit_job_card(request):
     if request.method == 'POST':
         form = JobCardForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('track_job_card')
+            messages.success(request, '✅ Your job card was submitted successfully.')
+            return redirect('submit_job_card')  # Redirect back to the form
+        else:
+            messages.error(request, '⚠️ There was an error. Please correct the highlighted fields.')
     else:
         form = JobCardForm()
     return render(request, 'tracker/submit_job_card.html', {'form': form})
@@ -21,10 +26,31 @@ def track_job_card(request):
 
 @login_required
 def maintenance_dashboard(request):
-    category_list = [ 'plumbing', 'electrical', 'carpentry', 'building', 'painting' ]
+
+    category_list = ['plumbing', 'electrical', 'carpentry', 'building', 'painting']
     category = request.GET.get('category', 'electrical')
     job_cards = JobCard.objects.filter(category=category)
-    return render(request, 'tracker/dashboard.html', {'job_cards': job_cards, 'category': category, 'category_list' : category_list})
+
+    # Map icons
+    card_icon_map = {
+        'plumbing': '🚿',
+        'electrical': '💡',
+        'carpentry': '🪚',
+        'building': '🏗️',
+        'painting': '🎨',
+    }
+
+    return render(request, 'tracker/dashboard.html', {
+        'job_cards': job_cards,
+        'category': category,
+        'category_list': category_list,
+        'card_icon_map': card_icon_map,
+    })
+
+
+
+
+
 
 @login_required
 def update_status(request, pk):

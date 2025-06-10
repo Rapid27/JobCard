@@ -24,7 +24,6 @@ class JobCard(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     time_submitted = models.DateTimeField(default=timezone.now)
-    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.category.title()} - {self.location} - {self.status.title()}"
