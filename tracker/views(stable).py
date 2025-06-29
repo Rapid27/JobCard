@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .models import JobCard
 from .forms import JobCardForm
 from django.contrib import messages
+from datetime import timedelta
+from django.utils import timezone
+from django.core.paginator import Paginator
 
 
 def submit_job_card(request):
@@ -31,6 +34,11 @@ def maintenance_dashboard(request):
     category = request.GET.get('category', 'electrical')
     job_cards = JobCard.objects.filter(category=category)
 
+    # Calculate stale cards
+    stale_threshold = timezone.now() - timedelta(days=7)
+    stale_cards = set(card.id for card in job_cards if card.last_updated < stale_threshold)
+
+
     # Map icons
     card_icon_map = {
         'plumbing': '🚿',
@@ -45,6 +53,7 @@ def maintenance_dashboard(request):
         'category': category,
         'category_list': category_list,
         'card_icon_map': card_icon_map,
+        'stale_cards': stale_cards,
     })
 
 

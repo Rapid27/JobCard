@@ -22,8 +22,12 @@
             <div class="card-body">
               <!-- Icon + Title -->
               <h5 class="card-title text-facebook mb-2">
-                {{ card_icon_map|get_item:card.category }} {{ card.location }}
-              </h5>
+                  {{ card_icon_map|get_item:card.category }} {{ card.location }}
+                  {% if card.id in stale_cards %}
+                    <span class="badge bg-danger ms-2">⚠️ Overdue</span>
+                  {% endif %}
+            </h5>
+
 
               <!-- Status Badge -->
               <span class="badge
@@ -64,4 +68,5 @@
     <div class="alert alert-info">No job cards in this category yet.</div>
   {% endif %}
 </div>
+
 {% endblock %}

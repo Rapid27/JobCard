@@ -6,6 +6,7 @@ from .forms import JobCardForm
 from django.contrib import messages
 from datetime import timedelta
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 
 def submit_job_card(request):
